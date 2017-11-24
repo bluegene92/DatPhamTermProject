@@ -15,10 +15,11 @@ public class DeadState implements State{
 
 
     public DeadState() {}
-
+    Frog frog = (Frog) Main.gameData.friendFigures.get(0);
     @Override
     public void doAction(GameFigure gameFigure) {
             Main.gameData.removeEnemies.add(gameFigure);
+            frog.isHit = false;
     }
     
 }

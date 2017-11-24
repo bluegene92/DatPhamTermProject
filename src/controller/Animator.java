@@ -2,7 +2,9 @@ package controller;
 
 import java.util.concurrent.TimeUnit;
 import model.Car;
+import model.DeadState;
 import model.ExplosionState;
+import model.Frog;
 import model.FrogBullet;
 import model.GameFigure;
 
@@ -43,29 +45,41 @@ public class Animator implements Runnable {
     }
     
     private void processCollisions() {
-        // detect collisions between friendFigure and enemyFigures
-        // if detected, mark it as STATE_DONE, so that
-        // they can be removed at update() method
+        Frog frog = (Frog) Main.gameData.friendFigures.get(0);
         for (GameFigure ef : Main.gameData.enemyFigures) {
             for (GameFigure ff : Main.gameData.friendFigures) {
                 if (ef.getCollisionBox().intersects(ff.getCollisionBox())) {
-                    if (ef instanceof Car) {
-                    Car car = (Car) ef;
-                    car.setState(new ExplosionState());
-                    car.myState.doAction(car);
-                   
-                    //removeEnemies.add(ef);
+                    if (Main.gameData.frogHealth == 1) {
+                        Main.animator.gameOver = true;
                     }
+                    
+                    if (Main.animator.gameOver) {
+                        Main.gameData.frogHealth = 3;
+                    } 
+                    
+                    if (!frog.isHit) {
+                        Main.gameData.frogHealth--;
+                        frog.isHit = true;
+                        System.out.println(Main.gameData.frogHealth);
+                    }
+                    
                     if (ff instanceof FrogBullet)
                     {
                         FrogBullet fb = (FrogBullet) ff;
                         fb.myState.doAction(ff);
                     }
-                }       
-            }
+                    
+                    if (ef instanceof Car) {
+                        Car car = (Car) ef;
+                        car.setState(new ExplosionState());
+                        car.myState.doAction(car);
+
+                        car.setState(new DeadState());
+                        car.myState.doAction(car);
+                    }    
+                }
+            } // End for
         }
-        
-        
-    }
+    } // End processCollision()
 
 }

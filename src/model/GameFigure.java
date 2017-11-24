@@ -1,6 +1,8 @@
 package model;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public abstract class GameFigure implements CollisionBox {
 
@@ -29,5 +31,14 @@ public abstract class GameFigure implements CollisionBox {
 
     public State getState() {
         return myState;
+    }
+    
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = dimg.createGraphics();
+        g.drawImage(tmp, 0, 0, null);
+        g.dispose();
+        return dimg;    
     }
 }

@@ -5,6 +5,8 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameData {
@@ -12,7 +14,6 @@ public class GameData {
     private final int RADIUS = 6;
     public final List<GameFigure> enemyFigures;
     public final List<GameFigure> friendFigures;
-    
     public static Shooter shooter;
     public static Frog frog;
     private Random rand = new Random();
@@ -23,7 +24,7 @@ public class GameData {
 
     private List<Laser> laserList = new CopyOnWriteArrayList<>();
     
-    ArrayList<GameFigure> removeEnemies;
+    public static List<GameFigure> removeEnemies = new CopyOnWriteArrayList<>();
     
     public GameData() {
         enemyFigures = new CopyOnWriteArrayList<>();
@@ -59,6 +60,8 @@ public class GameData {
                 int ry = rand.nextInt(11 - 10 + 1) -60;
                 enemyFigures.add(new Meteor(rx, ry));
             }
+          
+          removeExplosion();
     }
     
     public void createLaser() {
@@ -69,13 +72,23 @@ public class GameData {
             friendFigures.add(laserList.get(i));
         }
     }
+    
+    public void removeExplosion() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                for (int i = 0; i < friendFigures.size(); i++) {
+                    GameFigure ff = friendFigures.get(i);
+                    if (ff instanceof Explosion) {
+                        friendFigures.remove(i);
+                    }
+                }
+            }
+        }, 0, 400);
+    }
 
     public void update() {
-        // no enemy is removed in the program
-        // since collision detection is not implemented yet.
-        // However, if collision detected, simply set
-        // f.state = GameFigure.STATE_DONE
-        removeEnemies = new ArrayList<>();
+
         GameFigure f;
         for (int i = 0; i < enemyFigures.size(); i++) {
             f = enemyFigures.get(i);
@@ -83,20 +96,22 @@ public class GameData {
                 removeEnemies.add(f);
             }
         }
+        
         enemyFigures.removeAll(removeEnemies);
 
         for (GameFigure g : enemyFigures) {
             g.update();
         }
         // missiles are removed if explosion is done
-        ArrayList<GameFigure> removeFriends = new ArrayList<>();
-        for (int i = 0; i < friendFigures.size(); i++) {
-            f = friendFigures.get(i);
-            if (f.state == GameFigureState.STATE_DONE) {
-                removeFriends.add(f);
-            }
-        }
-        friendFigures.removeAll(removeFriends);
+//        ArrayList<GameFigure> removeFriends = new ArrayList<>();
+//        for (int i = 0; i < friendFigures.size(); i++) {
+//            f = friendFigures.get(i);
+//            if (f.state == GameFigureState.STATE_DONE) {
+//                removeFriends.add(f);
+//            }
+//        }
+//        
+//        friendFigures.removeAll(removeFriends);
 
         
         for (GameFigure g : friendFigures) {
@@ -106,25 +121,7 @@ public class GameData {
         enemyFigures.removeAll(removeEnemies);
         
         
-        for (GameFigure enemy : enemyFigures) {
-            if (friendFigures.get(0).getCollisionBox().
-                    intersects(enemy.getCollisionBox())) {
-               
-                if (frogHealth == 1) {
-                    System.out.println("Game over");
-                    Main.animator.gameOver = true;
-                }
-                
-                frogHealth--;
-                if (Main.animator.gameOver) {
-                    frogHealth = 3;
-                }
-                if (!(enemy instanceof Shooter)) {
-                    enemy.state = GameFigureState.STATE_DONE;
-                }
-            }
-            
-        }
+
         
         for(GameFigure friend : friendFigures)
         {

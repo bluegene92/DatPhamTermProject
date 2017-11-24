@@ -21,7 +21,7 @@ public class FrogBullet extends GameFigure {
     private static final int UNIT_TRAVEL_DISTANCE = 4; // per frame move
     public boolean explode = false;
     private int size = SIZE;
-    public State myState;
+    public State myState = new AliveState();
     public FrogBullet(float sx, float sy, float tx, float ty, Color color) {
         super(sx, sy);
         super.state = GameFigureState.FROGBULLET_STATE_LAUCHED;

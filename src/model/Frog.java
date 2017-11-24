@@ -17,7 +17,9 @@ public class Frog extends GameFigure implements Observer {
     private double moveX = 0;
     private double moveY=0;
     //private int direction = 1; // +1: to the right; -1 to the left
-
+    
+    public boolean isHit = false;
+    
     public Frog(float x, float y) {
         super(x, y); // origin: upper-left corner
         super.state = GameFigureState.FROG_STATE_APPEARED;

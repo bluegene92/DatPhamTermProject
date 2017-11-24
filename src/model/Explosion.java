@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 public class Explosion extends GameFigure {
     
     public BufferedImage image;
+    public BufferedImage smallImage;
     private int width;
     private int height;
     private int index;
@@ -28,6 +29,11 @@ public class Explosion extends GameFigure {
         
         try {
             image = ImageIO.read(getClass().getResource("explosion.png"));
+            width = image.getWidth();
+            height = image.getHeight();
+            smallImage = resize(image, width/6, height/6);
+            width = smallImage.getWidth();
+            height = smallImage.getHeight();
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "Error: Cannot open shooter.png");
             System.exit(-1);
@@ -36,7 +42,7 @@ public class Explosion extends GameFigure {
     
     @Override
     public void render(Graphics2D g) {
-        g.drawImage(image,(int) x,(int) y, null);
+        g.drawImage(smallImage,(int) x - (width/6),(int) y - (height/6), null);
     }
 
     @Override

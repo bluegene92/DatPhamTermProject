@@ -11,9 +11,11 @@ public class ExplosionState implements State{
 
     @Override
     public void doAction(GameFigure gameFigure) {
-        if(gameFigure instanceof Car)
-        {
-            Main.gameData.friendFigures.add(new Explosion(gameFigure.x,gameFigure.y));
+        if (gameFigure instanceof Car) {
+        Main.gameData.friendFigures.add(new Explosion(gameFigure.x,gameFigure.y));
+        Car car = (Car) gameFigure;
+        car.setState(new DeadState());
+        car.myState.doAction(car);
         }
     }
     
