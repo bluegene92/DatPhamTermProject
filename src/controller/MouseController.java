@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import model.Missile;
-import model.Shooter;
+//import model.Shooter;
+import model.Frog;
 
 public class MouseController extends MouseAdapter {
     
@@ -17,16 +18,15 @@ public class MouseController extends MouseAdapter {
         int px = me.getX();
         int py = me.getY();
 
-        Shooter shooter = (Shooter) Main.gameData.friendFigures.get(0);
-
-        Missile m = new Missile(
-                shooter.getXofMissileShoot(),
-                shooter.getYofMissileShoot(),
-                px, py, // target location where the missile explodes
-                Color.RED);
-
-        Main.gameData.friendFigures.add(m);
-
+        //Shooter shooter = (Shooter) Main.gameData.enemyFigures.get(0);
+//        Frog frog = (Frog) Main.gameData.friendFigures.get(0);
+//
+//        Missile m = new Missile(
+//                frog.getXofMissileShoot(),
+//                frog.getYofMissileShoot(),
+//                px, py, // target location where the missile explodes
+//                Color.RED);
+//        Main.gameData.friendFigures.add(m);
     }
     
     @Override

@@ -1,21 +1,30 @@
 package model;
 
 public class GameFigureState {
-
+    
     /* common to all game figures */
     public static final int STATE_DONE = 0;
+    
+    /* Frog states*/
+    public static final int FROG_STATE_APPEARED = 12;
+    public static final int FROG_STATE_DAMAGED = 13;
 
     /* missile states */
     public static final int MISSILE_STATE_LAUNCHED = 1;
     public static final int MISSILE_STATE_EXPLODED = 2;
 
-    /* ufo states */
-    public static final int UFO_STATE_APPEARED = 10;
-    public static final int UFO_STATE_DAMAGED = 11; // not implemented yet
+    /*frog bullet states */
+    public static final int FROGBULLET_STATE_LAUCHED = 3;
+    public static final int FROGBULLET_STATE_EXPLODED = 4;
+    
+    /* car states */
+    public static final int CAR_STATE_APPEARED = 10;
+    public static final int CAR_STATE_DAMAGED = 11; // not implemented yet
 
-    /* bomb states */
-    public static final int BOMB_STATE_ADDED = 20;
-
+    /* meteor states */
+    public static final int METEOR_STATE_APPEARED = 14;
+    public static final int METEOR_STATE_DAMAGED = 15;
+    
     /* shooter states */
     public static final int SHOOTER_STATE_HEALTH_LEVEL_5 = 30;
     public static final int SHOOTER_STATE_HEALTH_LEVEL_4 = 31; // not implemented yet

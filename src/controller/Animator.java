@@ -1,12 +1,17 @@
 package controller;
 
 import java.util.concurrent.TimeUnit;
+import model.Car;
+import model.ExplosionState;
+import model.FrogBullet;
+import model.GameFigure;
 
 public class Animator implements Runnable {
 
     public boolean running = true;
     private final int FRAMES_PER_SECOND = 40;
 
+    public boolean gameOver = true;
     @Override
     public void run() {
 
@@ -15,7 +20,10 @@ public class Animator implements Runnable {
             
             processCollisions();
 
-            Main.gameData.update();
+            if (!gameOver) {
+                Main.gameData.update();
+            }
+            
             Main.gamePanel.gameRender();
             Main.gamePanel.printScreen();
 
@@ -38,6 +46,26 @@ public class Animator implements Runnable {
         // detect collisions between friendFigure and enemyFigures
         // if detected, mark it as STATE_DONE, so that
         // they can be removed at update() method
+        for (GameFigure ef : Main.gameData.enemyFigures) {
+            for (GameFigure ff : Main.gameData.friendFigures) {
+                if (ef.getCollisionBox().intersects(ff.getCollisionBox())) {
+                    if (ef instanceof Car) {
+                    Car car = (Car) ef;
+                    car.setState(new ExplosionState());
+                    car.myState.doAction(car);
+                   
+                    //removeEnemies.add(ef);
+                    }
+                    if (ff instanceof FrogBullet)
+                    {
+                        FrogBullet fb = (FrogBullet) ff;
+                        fb.myState.doAction(ff);
+                    }
+                }       
+            }
+        }
+        
+        
     }
 
 }

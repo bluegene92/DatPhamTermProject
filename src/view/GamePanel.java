@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Shape;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
+import model.BackGround;
 import model.GameFigure;
 
 public class GamePanel extends JPanel {
@@ -18,8 +20,11 @@ public class GamePanel extends JPanel {
     // off screen rendering
     private Graphics2D g2;
     private Image dbImage = null; // double buffer image
+    public BackGround backGround = new BackGround();
+    
 
     public void gameRender() {
+        
         width = getSize().width;
         height = getSize().height;
         if (dbImage == null) {
@@ -32,12 +37,11 @@ public class GamePanel extends JPanel {
                 g2 = (Graphics2D) dbImage.getGraphics();
             }
         }
-
         g2.clearRect(0, 0, width, height);
-        g2.setBackground(Color.BLACK);
 
         if (Main.animator.running) {
-
+            backGround.render(g2);
+            Main.gameData.scoreBoard.render(g2);
             for (GameFigure f : Main.gameData.enemyFigures) {
                 f.render(g2);
             }

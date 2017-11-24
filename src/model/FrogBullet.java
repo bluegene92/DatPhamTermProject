@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public class Missile extends GameFigure {
+public class FrogBullet extends GameFigure {
 
     // missile size
     private static final int SIZE = 5;
@@ -16,47 +16,46 @@ public class Missile extends GameFigure {
     
 
     // public properties for quick access
-    public Color color;
     public Point2D.Float target;
 
     private static final int UNIT_TRAVEL_DISTANCE = 4; // per frame move
-
+    public boolean explode = false;
     private int size = SIZE;
-
-    /**
-     *
-     * @param sx start x of the missile
-     * @param sy start y of the missile
-     * @param tx target x of the missile
-     * @param ty target y of the missile
-     * @param color color of the missile
-     */
-    public Missile(float sx, float sy, float tx, float ty, Color color) {
+    public State myState;
+    public FrogBullet(float sx, float sy, float tx, float ty, Color color) {
         super(sx, sy);
-        super.state = GameFigureState.MISSILE_STATE_LAUNCHED;
+        super.state = GameFigureState.FROGBULLET_STATE_LAUCHED;
         this.target = new Point2D.Float(tx, ty);
-        this.color = color;
-
+        setState(new LaunchBullet());
         double angle = Math.atan2(ty - sy, tx - sx);
         dx = (float) (UNIT_TRAVEL_DISTANCE * Math.cos(angle));
         dy = (float) (UNIT_TRAVEL_DISTANCE * Math.sin(angle));
+    }
+    
+    @Override
+    public void setState(State state) {
+        myState = state;
+        
     }
 
     @Override
     public void render(Graphics2D g) {
         //g.setColor(color);
-        g.setStroke(new BasicStroke(2)); // thickness of the line
-        g.drawOval((int) (super.x - size / 2),
+        g.setStroke(new BasicStroke(10)); // thickness of the line
+        g.drawRect((int) (super.x - size / 2),
                 (int) (super.y - size / 2),
                 size, size);
+        if(myState.getClass().equals(new BulletExploded().getClass())){
+            g.fillRect((int)(x),(int)(y-size/2),size*2,size*2);
+        }
     }
 
     @Override
     public void update() {
         updateState();
-        if (state == GameFigureState.MISSILE_STATE_LAUNCHED) {
+        if (state == GameFigureState.FROGBULLET_STATE_LAUCHED) {
             updateLocation();
-        } else if (state == GameFigureState.MISSILE_STATE_EXPLODED) {
+        } else if (explode=true) {
             updateSize();
         }
     }
@@ -68,25 +67,25 @@ public class Missile extends GameFigure {
     }
 
     public void updateSize() {
-        size += 2;
+        size += 10;
     }
 
     public void updateState() {
-        if (state == GameFigureState.MISSILE_STATE_LAUNCHED) {
+        if (state == GameFigureState.FROGBULLET_STATE_LAUCHED) {
             double distance = target.distance(super.x, super.y);
             boolean targetReached = distance <= 2.0;
             if (targetReached) {
-                state = GameFigureState.MISSILE_STATE_EXPLODED;
+                myState.doAction(this);
+                
             }
-        } else if (state == GameFigureState.MISSILE_STATE_EXPLODED) {
+        } else if (state == GameFigureState.FROGBULLET_STATE_EXPLODED) {
             if (size >= MAX_EXPLOSION_SIZE) {
                 state = GameFigureState.STATE_DONE;
             }
         }
     }
     public Rectangle2D getCollisionBox(){
-        float rectSize = (float)(size*.9);
-        Rectangle2D.Float rect = new Rectangle2D.Float((super.x-rectSize/2),(super.y-rectSize/2),rectSize,rectSize);
+        Rectangle2D.Float rect = new Rectangle2D.Float((int)(x),(int)(y-size/2),size*2,size*2);
         return rect;
     }
 

@@ -11,8 +11,9 @@ import javax.swing.JPanel;
 
 public class MainWindow extends JFrame {
 
-    public static JButton addButton;
     public static JButton quitButton;
+    public static JButton startButton;
+    public static JButton restartButton;
     public static MouseController mouseController;
 
     public MainWindow() {
@@ -22,15 +23,18 @@ public class MainWindow extends JFrame {
         c.add(Main.gamePanel, "Center");
 
         JPanel southPanel = new JPanel();
-        addButton = new JButton("Add 10");
-        southPanel.add(addButton);
+        startButton = new JButton("Start");
+        southPanel.add(startButton);
+        restartButton = new JButton("Restart");
+        southPanel.add(restartButton);
         quitButton = new JButton("Quit");
         southPanel.add(quitButton);
         c.add(southPanel, "South");
 
         ButtonListener buttonListener = new ButtonListener();
-        addButton.addActionListener(buttonListener);
         quitButton.addActionListener(buttonListener);
+        startButton.addActionListener(buttonListener);
+        restartButton.addActionListener(buttonListener);
 
         mouseController = new MouseController();
         Main.gamePanel.addMouseListener(mouseController);
@@ -40,8 +44,10 @@ public class MainWindow extends JFrame {
         Main.gamePanel.addKeyListener(keyListener);
         Main.gamePanel.setFocusable(true);
         // just have one Component "true", the rest must be "false"
-        addButton.setFocusable(false);
+        startButton.setFocusable(false);
         quitButton.setFocusable(false);
+        restartButton.setFocusable(false);
+
     }
 
 }
