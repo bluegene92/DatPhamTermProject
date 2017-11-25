@@ -46,9 +46,16 @@ public class Animator implements Runnable {
     
     private void processCollisions() {
         Frog frog = (Frog) Main.gameData.friendFigures.get(0);
+        
         for (GameFigure ef : Main.gameData.enemyFigures) {
-            for (GameFigure ff : Main.gameData.friendFigures) {
-                if (ef.getCollisionBox().intersects(ff.getCollisionBox())) {
+            if (frog.getCollisionBox().intersects(ef.getCollisionBox())) {
+                    if (!frog.isHit) {
+                        System.out.println(Main.gameData.frogHealth);
+                        Main.gameData.frogHealth--;
+                        frog.isHit = true;
+                      
+                    }
+                    
                     if (Main.gameData.frogHealth == 1) {
                         Main.animator.gameOver = true;
                     }
@@ -56,12 +63,12 @@ public class Animator implements Runnable {
                     if (Main.animator.gameOver) {
                         Main.gameData.frogHealth = 3;
                     } 
-                    
-                    if (!frog.isHit) {
-                        Main.gameData.frogHealth--;
-                        frog.isHit = true;
-                        System.out.println(Main.gameData.frogHealth);
-                    }
+            }
+        }
+        
+        for (GameFigure ef : Main.gameData.enemyFigures) {
+            for (GameFigure ff : Main.gameData.friendFigures) {
+                if (ef.getCollisionBox().intersects(ff.getCollisionBox())) {    
                     
                     if (ff instanceof FrogBullet)
                     {
@@ -81,5 +88,4 @@ public class Animator implements Runnable {
             } // End for
         }
     } // End processCollision()
-
 }
